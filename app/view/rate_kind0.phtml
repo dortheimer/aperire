@@ -1,0 +1,37 @@
+
+
+
+	<div data-role="page" class="osa-demos">
+		<div data-role="header" data-position="fixed" data-theme="b">
+		    <a href="<?php echo $project_url ?>" data-icon="arrow-l">Back</a>
+		    <h1><?php echo $headline ?></h1>
+		</div>
+		<!-- /header -->
+
+		<div data-role="content" class="osa-content">
+			<form action="<?php echo $post_url ?>" method="post" id="rate_form_0">
+				<?php $fieldid = 'question_0_'.$questions[0]->id.'_'.$questions[1]->id?>
+				<p>
+				<?php echo $score ?>%
+				<fieldset data-role="controlgroup">
+				    <legend>Which is more effective?</legend>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_1" value="<?php echo $questions[0]->id?>">
+				        <label for="<?php echo $fieldid ?>_1"><?php echo $questions[0]->name?></label>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_2" value="<?php echo $questions[1]->id?>">
+				        <label for="<?php echo $fieldid ?>_2"><?php echo $questions[1]->name?></label>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_3" value="0">
+				        <label for="<?php echo $fieldid ?>_3">The same - no difference</label>
+				</fieldset>
+				</p>
+			</form>
+		</div>
+<script type="text/javascript">
+$("#rate_form_0 input").click(function () {
+	$("#rate_form_0").submit();
+});
+</script>
+		<!-- /content -->
+
+
+
+

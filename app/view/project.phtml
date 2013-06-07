@@ -1,0 +1,176 @@
+
+<?php //print_R($policies); ?>
+
+	<div data-role="page" class="osa-demos">
+		<div data-role="header" data-position="fixed" data-theme="b">
+		    <a href="/projects/" data-icon="arrow-l">Projects</a>
+		    <h1><?php echo $headline ?></h1>
+		    <a href="#" data-icon="gear">Options</a>
+		</div>
+		<!-- /header -->
+
+		<style type="text/css">
+		#cy {
+		  height: 700px;
+		  width: 700px;
+		}
+		</style>
+
+		<div data-role="content" class="osa-content">
+<?php
+	if ($policies and sizeof($policies['nodes'])>1):
+?>
+	<p>
+		<a href="<?php echo $userid ? $rate_url : $login_url ?>" data-role="button" data-icon="check" data-theme="b">Start to rate policy tools</a>
+	</p>
+	<div id="cy"></div>
+<?php endif;?>
+		<p> <?php echo $description ?></p>
+
+				<a href="<?php echo $userid ? $new_tool_url : $login_url ?>" data-role="button" data-rel="dialog" data-transition="slidedown" data-icon="plus" data-theme="b">Add a new policy tool</a>
+			</p>
+		</div>
+
+<?php if (sizeof ($policies['nodes'])>1) {
+// 	foreach ($policies['applicable_page_rank'] as $rank)
+// 		echo intval($rank*10000).' ';
+// 	echo intval(max($policies['applicable_page_rank'])*10000);
+// 	print_r($policies);
+
+?>
+<script type="text/javascript">
+$('#cy').cytoscape({
+	layout: {
+	    name: 'arbor',
+	    liveUpdate: true, // whether to show the layout as it's running
+	    ready: undefined, // callback on layoutready
+	    stop: undefined, // callback on layoutstop
+	    maxSimulationTime: 10000, // max length in ms to run the layout
+	    fit: true, // fit to viewport
+	    padding: [ 50, 50, 50, 50 ], // top, right, bottom, left
+	    ungrabifyWhileSimulating: true, // so you can't drag nodes during layout
+
+	    // forces used by arbor (use arbor default on undefined)
+	    repulsion: undefined,
+	    stiffness: undefined,
+	    friction: undefined,
+	    gravity: true,
+	    fps: undefined,
+	    precision: undefined,
+
+	    // static numbers or functions that dynamically return what these
+	    // values should be for each element
+	    nodeMass: undefined,
+	    edgeLength: undefined,
+
+	    stepSize: 1, // size of timestep in simulation
+
+	    // function that returns true if the system is stable to indicate
+	    // that the layout can be stopped
+	    stableEnergy: function( energy ){
+	        var e = energy;
+	        return (e.max <= 0.5) || (e.mean <= 0.3);
+	    }
+	  },
+	  style: cytoscape.stylesheet()
+	    .selector('node')
+	      .css({
+	        'content': 'data(name)',
+	        'text-valign': 'center',
+	        'color': '#000',
+	        'font-family': 'arial',
+	        'font-size': 11,
+	        'text-valign': 'center',
+	        'background-color' :'mapData(applicable, <?php echo intval(min($policies['applicable_page_rank'])*10000) ?>, <?php echo intval(max($policies['applicable_page_rank'])*10000) ?>, #F0F9A3, #E4A04F)',
+<?php
+
+?>
+	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 130)',
+	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 130)',
+	       'border-color': '#fff'
+	      })
+	    .selector('edge')
+	      .css({
+	        'target-arrow-shape': 'triangle',
+	        'source-arrow-shape':'none'
+	      })
+	    .selector(':selected')
+	      .css({
+	        'background-color': 'black',
+	        'line-color': 'black',
+	        'target-arrow-color': 'black',
+	        'source-arrow-color': 'black'
+	      })
+	    .selector('.faded')
+	      .css({
+	        'opacity': 0.25,
+	        'text-opacity': 0
+	      })
+	    .selector('edge.kind1')
+	      .css({
+	        'line-color': '#518C1A',
+	        'width': '7',
+		   	'target-arrow-color' : '#518C1A'
+	      })
+	     .selector('edge.kind2')
+	      .css({
+	        'line-color': '#2C2FC7',
+	        'target-arrow-color' : '#2C2FC7',
+	        'width': '3'
+	      })
+	       .selector('edge.kind3')
+	      .css({
+	        'line-color': '#BD1A1A',
+	        'target-arrow-color': '#BD1A1A',
+	        'width': '10'
+	      }),
+
+	  elements: {
+	    nodes: [
+<?php
+		foreach ($policies['nodes'] as $node => $name) {
+			$effectiveness = 		!empty($policies['effect_page_rank'][$node]) ?
+										intval($policies['effect_page_rank'][$node]*10000) : 0;
+
+			$applicable_page_rank = !empty($policies['applicable_page_rank'][$node]) ?
+										intval($policies['applicable_page_rank'][$node]*10000) : 0;
+
+			$arr[] = '{ data: {id:\''.$node.'\',name:\''.mb_substr($name,0,20).
+						'\',effective:'.$effectiveness.
+						', applicable:'.$applicable_page_rank.' }}';
+		}
+		echo join(",\n",$arr);
+?>
+	    ],
+	    edges: [
+<?php
+$arr=array();
+foreach ($policies['relations'] as $kind_id => $network) {
+
+	foreach ($network as $node => $edges){
+		foreach ($edges as $edge){
+			$arr[] = '{ data: {source:\''.$node.'\',target:\''.$edge.'\'},classes: \'kind'.$kind_id.'\' }';
+		}
+	}
+}
+echo join(",\n",$arr);
+?>
+	    ]
+	  },
+
+	  ready: function(){
+	    window.cy = this;
+
+	    // giddy up...
+	    cy.elements().unselectify();
+
+	  }
+	});
+
+
+</script>
+		<!-- /content -->
+
+<?php } ?>
+
+

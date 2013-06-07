@@ -1,0 +1,20 @@
+
+
+
+	<div data-role="page" class="osa-demos">
+		<div data-role="header" data-position="fixed" data-theme="b">
+		    <h1>Aperire - Open policy optimization</h1>
+		</div>
+		<!-- /header -->
+
+		<div data-role="content" class="osa-content">
+			<h1><?php echo $headline ?></h1>
+		<?php foreach ($projects as $project): ?>
+			<p><a href="<?php echo $project->url() ?>"><?php echo $project->name ?></a></p>
+		<?php endforeach;?>
+		</div>
+		<!-- /content -->
+
+
+
+

@@ -1,0 +1,42 @@
+
+
+
+	<div data-role="page" class="osa-demos">
+		<div data-role="header" data-position="fixed" data-theme="b">
+		    <a href="<?php echo $project_url ?>" data-icon="arrow-l">Back</a>
+		    <h1><?php echo $headline ?></h1>
+		</div>
+		<!-- /header -->
+
+		<div data-role="content" class="osa-content">
+			<form action="<?php echo $post_url ?>" method="post" id="rate_form_2">
+				<?php $fieldid = 'question_2_'.$questions[0]->id.'_'.$questions[1]->id?>
+				<p>
+				<?php echo $score ?>%
+				<fieldset data-role="controlgroup">
+				    <legend>How does "<?php echo $questions[0]->name?>" effect on "<?php echo $questions[1]->name?>"?</legend>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_1" value="1">
+				        <label for="<?php echo $fieldid ?>_1">Is a precondition</label>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_2" value="2">
+				        <label for="<?php echo $fieldid ?>_2">Facilitating</label>
+				   		<input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_4" value="0">
+				        <label for="<?php echo $fieldid ?>_4">No effect</label>
+				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_3" value="3">
+				        <label for="<?php echo $fieldid ?>_3">Contradicts</label>
+
+				</fieldset>
+				</p>
+			</form>
+		</div>
+
+<script type="text/javascript">
+
+$("#rate_form_2 input").click(function () {
+	$("#rate_form_2").submit();
+});
+</script>
+		<!-- /content -->
+
+
+
+
