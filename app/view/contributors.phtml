@@ -22,8 +22,8 @@
 	            <ul>
 	                <li><a href="<?php echo $contributors_url ?>" data-icon="star" class="ui-state-persist">Contributors</a></li>
 	                <li><a href="<?php echo $packages_url ?>" data-icon="grid">Policy packages</a></li>
-	                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" data-icon="plus">New policy</a></li>
-	                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" data-icon="check">Rare policies</a></li>
+	                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">New policy</a></li>
+	                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="check">Rare policies</a></li>
 
 	            </ul>
 	        </div>

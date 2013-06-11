@@ -112,3 +112,10 @@ CREATE VIEW `apr_relations` AS select `r`.`tool_id` AS `tool_id`,`r`.`tool_id_re
 DROP TABLE IF EXISTS `apr_view_rel1`;
 
 CREATE VIEW `apr_view_rel1` AS select `r`.`tool_id` AS `tool_id`,`r`.`tool_id_rel` AS `tool_id_rel`,`r`.`rel_kind` AS `rel_kind`,`r`.`value` AS `value` from `apr_tool_relations` `r` where ((`r`.`rel_kind` = 2) and (`r`.`value` in (1,2,3))) group by `r`.`tool_id`,`r`.`tool_id_rel`,`r`.`rel_kind`;
+
+
+drop view if exists apr_effective; create view apr_effective as select project_id, tool_id, tool_id_rel,value,rel_kind
+from
+apr_tools 
+inner join apr_tool_relations on apr_tool_relations.tool_id = apr_tools.id
+where rel_kind in(0,1)

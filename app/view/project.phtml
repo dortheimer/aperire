@@ -1,45 +1,20 @@
-
-<?php //print_R($policies); ?>
-
 	<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
+		<div data-role="header" data-position="fixed" data-theme="c">
 		    <a href="/projects/" data-icon="arrow-l">Projects</a>
 		    <h1><?php echo $headline ?></h1>
 		    <a href="#" data-icon="gear">Options</a>
 		</div>
-		<!-- /header -->
-
-		<style type="text/css">
-		#cy {
-		  height: 700px;
-		  width: 700px;
-		}
-		</style>
 
 		<div data-role="content" class="osa-content">
+
+		<div id="cy<?php echo $id ?>" class="cy"></div>
+	</div>
+
 <?php
-	if ($policies and sizeof($policies['nodes'])>1):
-?>
-	<p>
-		<a href="<?php echo $userid ? $rate_url : $login_url ?>" data-role="button" data-icon="check" data-theme="b">Start to rate policy tools</a>
-	</p>
-	<div id="cy"></div>
-<?php endif;?>
-		<p> <?php echo $description ?></p>
-
-				<a href="<?php echo $userid ? $new_tool_url : $login_url ?>" data-role="button" data-rel="dialog" data-transition="slidedown" data-icon="plus" data-theme="b">Add a new policy tool</a>
-			</p>
-		</div>
-
-<?php if (sizeof ($policies['nodes'])>1) {
-// 	foreach ($policies['applicable_page_rank'] as $rank)
-// 		echo intval($rank*10000).' ';
-// 	echo intval(max($policies['applicable_page_rank'])*10000);
-// 	print_r($policies);
-
+if (sizeof ($policies['nodes'])>1) {
 ?>
 <script type="text/javascript">
-$('#cy').cytoscape({
+$('#cy<?php echo $id ?>').cytoscape({
 	layout: {
 	    name: 'arbor',
 	    liveUpdate: true, // whether to show the layout as it's running
@@ -85,8 +60,8 @@ $('#cy').cytoscape({
 <?php
 
 ?>
-	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 130)',
-	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 130)',
+	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
+	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
 	       'border-color': '#fff'
 	      })
 	    .selector('edge')
@@ -109,7 +84,7 @@ $('#cy').cytoscape({
 	    .selector('edge.kind1')
 	      .css({
 	        'line-color': '#518C1A',
-	        'width': '7',
+	        'width': '3',
 		   	'target-arrow-color' : '#518C1A'
 	      })
 	     .selector('edge.kind2')
@@ -122,7 +97,7 @@ $('#cy').cytoscape({
 	      .css({
 	        'line-color': '#BD1A1A',
 	        'target-arrow-color': '#BD1A1A',
-	        'width': '10'
+	        'width': '3'
 	      }),
 
 	  elements: {
@@ -174,3 +149,14 @@ echo join(",\n",$arr);
 <?php } ?>
 
 
+	<div data-role="footer" class="ui-body-c">
+		<div data-role="navbar" data-position="fixed">
+            <ul>
+                <li><a href="<?php echo $contributors_url ?>" data-icon="star">Contributors</a></li>
+                <li><a href="<?php echo $packages_url ?>" data-icon="grid" class="ui-state-persist">Policy packages</a></li>
+                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">New policy</a></li>
+                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="check">Rare policies</a></li>
+
+            </ul>
+        </div>
+	</div>

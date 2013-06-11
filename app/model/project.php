@@ -242,7 +242,6 @@ class AperireModelProject extends AperireModel {
 				->limit(2);
 
 		$query = $db->select("*")->from($query)->where('rate_0=0')->orWhere('rate_1=0');
-
 		$res = $db->query($query)->fetchAll();
 		if ($res){
 
@@ -278,10 +277,10 @@ class AperireModelProject extends AperireModel {
 
 			// Find out required kind
 			$kind=2;
-			if ($res[0]['kind_0'] <= $res[0]['kind_1'] and $res[0]['kind_0'] <= $res[0]['kind_2']){
+			if ($res[0]['kind_0']*2 <= $res[0]['kind_1']*2 and $res[0]['kind_0']*2 <= $res[0]['kind_2']){
 				$kind=0;
 			}
-			elseif($res[0]['kind_1'] <= $res[0]['kind_0'] and $res[0]['kind_1'] <= $res[0]['kind_2']){
+			elseif($res[0]['kind_1']*2 <= $res[0]['kind_0']*2 and $res[0]['kind_1']*2 <= $res[0]['kind_2']){
 				$kind=1;
 			}
 
@@ -293,6 +292,37 @@ class AperireModelProject extends AperireModel {
 		return $data;
 	}
 
+	public function getContributors() {
+		$db = Aperire::$db;
+		$pr = Aperire::$config->db->prefix;
+		$id = $this->getId();
+
+		$query = 'select * from '.$pr.'users
+		inner join
+		(select '.$pr.'tool_relations.user_id, count(*) as num, "relation" as kind from '.$pr.'tool_relations
+		inner join '.$pr.'tools on '.$pr.'tools.id = '.$pr.'tool_relations.tool_id
+		where project_id='.$id.' group by user_id
+		union all
+		select user_id, count(*) as num, "tool" as kind from '.$pr.'tools where project_id='.$id.' group by user_id
+		) as d on d.user_id = '.$pr.'users.id';
+
+		$res = $db->query($query)->fetchAll();
+		//organize rows
+		$data = array();
+		foreach ($res as $res1) {
+			$data[$res1['user_id']] = array(
+					'id'=>$res1['user_id'],
+					'real_name'=>$res1['real_name']
+			);
+			if ($res1['kind']=='tool'){
+				$data[$res1['user_id']]['tools'] = $res1['num'];
+			}
+			elseif ($res1['kind']=='relation'){
+				$data[$res1['user_id']]['relation'] = $res1['num'];
+			}
+		}
+		return $data;
+	}
 	protected function getTool($kind=0) {
 		$db = Aperire::$db;
 		$pr = Aperire::$config->db->prefix;

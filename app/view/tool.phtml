@@ -1,5 +1,6 @@
 <div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
+		<div data-role="header" data-position="fixed" data-theme="c">
+			<a href="<?php echo $contributors_url ?>" data-icon="arrow-l">Project</a>
 		    <h1>Add new policy tool</h1>
 		</div>
 		<!-- /header -->
@@ -13,3 +14,14 @@
 		</div>
 		<!-- /content -->
 
+	<div data-role="footer" class="ui-body-c">
+		<div data-role="navbar" data-position="fixed">
+            <ul>
+                <li><a href="<?php echo $contributors_url ?>" data-icon="star">Contributors</a></li>
+                <li><a href="<?php echo $packages_url ?>" data-icon="grid">Policy packages</a></li>
+                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? 'data-rel="dialog"' : '' ?> class="ui-state-persist" data-icon="plus">New policy</a></li>
+                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" data-icon="check">Rare policies</a></li>
+
+            </ul>
+        </div>
+	</div>
