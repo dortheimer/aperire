@@ -1,0 +1,30 @@
+
+<?php //print_R($policies); ?>
+
+	<div data-role="page" class="osa-demos">
+		<div data-role="header" data-position="fixed" data-theme="c">
+		    <a href="/projects/" data-icon="arrow-l">Projects</a>
+		    <h1><?php echo $headline ?></h1>
+		    <a href="#" data-icon="gear">Options</a>
+		</div>
+
+		<div data-role="content" class="osa-content">
+			<p> <?php echo $description ?></p>
+			<ul data-role="listview" data-count-theme="c" data-inset="true">
+		<?php foreach ($contributors as $contributor) :?>
+			    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?><span class="ui-li-count"><?php echo $contributor['relation'] ?></span></a></li>
+		<?php endforeach;?>
+			</ul>
+		</div>
+
+		<div data-role="footer" class="ui-body-c">
+			<div data-role="navbar" data-position="fixed">
+	            <ul>
+	                <li><a href="<?php echo $contributors_url ?>" data-icon="star" class="ui-state-persist">Contributors</a></li>
+	                <li><a href="<?php echo $packages_url ?>" data-icon="grid">Policy packages</a></li>
+	                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" data-icon="plus">New policy</a></li>
+	                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" data-icon="check">Rare policies</a></li>
+
+	            </ul>
+	        </div>
+		</div>
