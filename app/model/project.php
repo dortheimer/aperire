@@ -66,7 +66,7 @@ class AperireModelProject extends AperireModel {
 	}
 
 
-	public function getTools(){
+	public function getToolsRanked(){
 		require_once BASE.'/app/model/tool.php';
 		require_once BASE.'/lib/pageRank.php';
 
@@ -216,7 +216,23 @@ class AperireModelProject extends AperireModel {
 
 	}
 
+	public function getTools() {
+		include BASE.'/app/model/tool.php';
 
+		$pr = Aperire::$config->db->prefix;
+		$db = Aperire::$db;
+		$data = array();
+
+		$query = $db->select('*')
+			->from($pr.'tools')
+			->where('project_id=?',$this->getId());
+		$res = $db->query($query)->fetchAll();
+		for ($i=0, $l=sizeof($res); $i<$l; $i++){
+			$data[] = new AperireModelTool($res[$i]);
+		}
+		return $data;
+
+	}
 	public function getRandomTools() {
 		include BASE.'/app/model/tool.php';
 

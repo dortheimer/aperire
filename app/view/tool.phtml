@@ -11,6 +11,11 @@
 				<input type="text" name="new_tool" id="new_tool" value="" placeholder="Your great idea!" />
 				<input type="submit" value="Done" data-icon="check" />
 			</form>
+		<ul data-role="listview" data-count-theme="c" data-inset="true">
+		<?php foreach ($tools as $tool) :?>
+			    <li><?php echo $tool->name ?></li>
+		<?php endforeach;?>
+		</ul>
 		</div>
 		<!-- /content -->
 

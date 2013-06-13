@@ -12,7 +12,12 @@
 			<p> <?php echo $description ?></p>
 			<ul data-role="listview" data-count-theme="c" data-inset="true">
 		<?php foreach ($contributors as $contributor) :?>
-			    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?><span class="ui-li-count"><?php echo $contributor['relation'] ?></span></a></li>
+			    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?>
+			    <span class="ui-li-count">
+			    	Ratings: <?php echo isset($contributor['relation']) ? $contributor['relation'] : 0 ?>
+			    	Policies: <?php echo isset($contributor['tools']) ? $contributor['tools'] : 0 ?>
+			    </span>
+			    </a></li>
 		<?php endforeach;?>
 			</ul>
 		</div>

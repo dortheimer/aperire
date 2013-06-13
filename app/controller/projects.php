@@ -37,11 +37,16 @@ class AperireControllerProjects extends AperireController {
 		$this->view = AperireView::factory(array(
 				'view'=>'tool'
 		));
-
+		// Add new tool
+		if (!empty(Aperire::$Router->post['new_tool'])){
+			// Save new tool
+			$this->model->create_tool(Aperire::$Router->post['new_tool']);
+		}
 		$data = new stdClass();
 		$data = $this->pupulate_nav($data);
 		$data->headline 		= 'New policy tool';
-		$data->post_url			= $this->model->url();
+		$data->tools 			= $this->model->getTools();
+		$data->post_url			= $this->model->url('tool');
 		$this->view->set_data($data);
 		$this->view->render();
 	}
@@ -84,19 +89,13 @@ class AperireControllerProjects extends AperireController {
 				'view'=>'project'
 		));
 
-		// Add new tool
-		if (!empty(Aperire::$Router->post['new_tool'])){
-			// Save new tool
-			$this->model->create_tool(Aperire::$Router->post['new_tool']);
-		}
-
 		$data = new stdClass();
 
 		$data = $this->pupulate_nav($data);
 		$data->id		 	= $this->model->getId();
 		$data->headline 	= $this->model->getName();
 		$data->description 	= $this->model->getDescription();
-		$data->policies 	= $this->model->getTools();
+		$data->policies 	= $this->model->getToolsRanked();
 
 		$this->view->set_data($data);
 		$this->view->render();
