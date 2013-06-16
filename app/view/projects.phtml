@@ -9,9 +9,11 @@
 
 		<div data-role="content" class="osa-content">
 			<h1><?php echo $headline ?></h1>
+			<ul data-role="listview" data-count-theme="c" data-inset="true">
 		<?php foreach ($projects as $project): ?>
-			<p><a href="<?php echo $project->url() ?>"><?php echo $project->name ?></a></p>
+			<li><a href="<?php echo $project->url() ?>"><?php echo $project->name ?></a></li>
 		<?php endforeach;?>
+			</ul>
 		</div>
 	</div>
 		<!-- /content -->

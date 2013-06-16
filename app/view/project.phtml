@@ -2,12 +2,40 @@
 		<div data-role="header" data-position="fixed" data-theme="b">
 		    <a href="/projects/" data-icon="arrow-l">Projects</a>
 		    <h1><?php echo $headline ?></h1>
-		    <a href="#" data-icon="gear">Options</a>
+		 <?php if(!$userid): ?>
+		    <a href="<?php echo $login_url ?>" data-rel="dialog" data-icon="check" >Log-in</a>
+		 <?php endif; ?>
 		</div>
 
 		<div data-role="content" class="osa-content">
 
-		<div id="cy<?php echo $id ?>" class="cy"></div>
+			<h2>Description</h2>
+			<p><?php echo $description ?></p>
+			<h2>Contributors</h2>
+			<ul data-role="listview" data-count-theme="c" data-inset="true">
+		<?php foreach ($contributors as $contributor) :?>
+			    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?>
+			    <span class="ui-li-count">
+			    	Ratings: <?php echo isset($contributor['relation']) ? $contributor['relation'] : 0 ?>
+			    	Policies: <?php echo isset($contributor['tools']) ? $contributor['tools'] : 0 ?>
+			    </span>
+			    </a></li>
+		<?php endforeach;?>
+			</ul>
+			<h2>Policies</h2>
+			<a href="/" data-role="button" data-inline="true">New policy</a>
+			<ul data-role="listview" data-count-theme="c" data-inset="true">
+			<?php foreach ($tools as $tool) :?>
+				    <li><?php echo $tool->name ?></li>
+			<?php endforeach;?>
+				    <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">Add policy</a></li>
+			</ul>
+
+			<h2>Network Analysis</h2>
+			<ul data-role="listview" data-count-theme="c" data-inset="true">
+				<li>Completion: <?php echo $score ?>%</li>
+			</ul>
+			<div id="cy<?php echo $id ?>" class="cy"></div>
 	</div>
 
 <?php
@@ -16,7 +44,7 @@ if (sizeof ($policies['nodes'])>1) {
 <script type="text/javascript">
 $('#cy<?php echo $id ?>').cytoscape({
 	layout: {
-	    name: 'arbor',
+	    name: 'arbor',//'grid',
 	    liveUpdate: true, // whether to show the layout as it's running
 	    ready: undefined, // callback on layoutready
 	    stop: undefined, // callback on layoutstop
@@ -57,9 +85,6 @@ $('#cy<?php echo $id ?>').cytoscape({
 	        'font-size': 11,
 	        'text-valign': 'center',
 	        'background-color' :'mapData(applicable, <?php echo intval(min($policies['applicable_page_rank'])*10000) ?>, <?php echo intval(max($policies['applicable_page_rank'])*10000) ?>, #F0F9A3, #E4A04F)',
-<?php
-
-?>
 	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
 	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
 	       'border-color': '#fff'
@@ -103,16 +128,20 @@ $('#cy<?php echo $id ?>').cytoscape({
 	  elements: {
 	    nodes: [
 <?php
-		foreach ($policies['nodes'] as $node => $name) {
+		foreach ($policies['relations_page_rank']['total'] as $node => $page_rank_temp) {
+			$name = 				$policies['nodes'][$node];
 			$effectiveness = 		!empty($policies['effect_page_rank'][$node]) ?
 										intval($policies['effect_page_rank'][$node]*10000) : 0;
 
 			$applicable_page_rank = !empty($policies['applicable_page_rank'][$node]) ?
 										intval($policies['applicable_page_rank'][$node]*10000) : 0;
+			$network_page_rank = !empty($policies['relations_page_rank']['total'][$node]) ?
+										intval($policies['relations_page_rank']['total'][$node]*10000) : 0;
 
-			$arr[] = '{ data: {id:\''.$node.'\',name:\''.mb_substr($name,0,20).
+			$arr[] = '{ data: {id:\''.$node.'\',name:\''.mb_ereg_replace("'","\'",mb_substr($name,0,30)).
 						'\',effective:'.$effectiveness.
-						', applicable:'.$applicable_page_rank.' }}';
+						', applicable:'.$applicable_page_rank.
+						',network:'.$network_page_rank.' }}';
 		}
 		echo join(",\n",$arr);
 ?>
@@ -134,10 +163,10 @@ echo join(",\n",$arr);
 	  },
 
 	  ready: function(){
-	    window.cy = this;
+	    window.cy<?php echo $id ?> = this;
 
 	    // giddy up...
-	    cy.elements().unselectify();
+	    cy<?php echo $id ?>.elements().unselectify();
 
 	  }
 	});
@@ -149,14 +178,11 @@ echo join(",\n",$arr);
 <?php } ?>
 
 
-	<div data-role="footer" class="ui-body-b">
+	<div data-role="footer">
 		<div data-role="navbar" data-position="fixed">
             <ul>
-                <li><a href="<?php echo $contributors_url ?>" data-icon="star">Contributors</a></li>
                 <li><a href="<?php echo $packages_url ?>" data-icon="grid" class="ui-state-persist">Policy packages</a></li>
-                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">New policy</a></li>
                 <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="check">Rare policies</a></li>
-
             </ul>
         </div>
 	</div>

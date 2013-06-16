@@ -54,14 +54,14 @@ class AperireControllerProjects extends AperireController {
 	protected function pupulate_nav($data){
 		$data->rate_url		= $this->model->url('rate');
 		$data->new_tool_url	= $this->model->url('tool');
-		$data->contributors_url = $this->model->url();
-		$data->packages_url = $this->model->url('packages');
+// 		$data->contributors_url = $this->model->url();
+		$data->packages_url = $this->model->url();
 		$data->userid		= Aperire::$user->id;
 		$data->login_url	= '/login/?back_url='.urlencode($_SERVER["REQUEST_URI"]);
 		return $data;
 	}
 
-	protected function viewAction () {
+	protected function contributorsAction () {
 		$this->model = AperireModel::factory(array(
 				'model'=>'project',
 				'id'=>Aperire::$Router->params['id']
@@ -72,14 +72,13 @@ class AperireControllerProjects extends AperireController {
 		$data = new stdClass();
 
 		$data = $this->pupulate_nav($data);
-		$data->id		 	= $this->model->getId();
 		$data->headline 	= $this->model->getName();
 		$data->description 	= $this->model->getDescription();
 		$data->contributors = $this->model->getContributors();
 		$this->view->set_data($data);
 		$this->view->render();
 	}
-	protected function packagesAction () {
+	protected function viewAction () {
 
 		$this->model = AperireModel::factory(array(
 				'model'=>'project',
@@ -93,10 +92,13 @@ class AperireControllerProjects extends AperireController {
 
 		$data = $this->pupulate_nav($data);
 		$data->id		 	= $this->model->getId();
+		$data->score		= $this->model->score();
+		$data->id		 	= $this->model->getId();
 		$data->headline 	= $this->model->getName();
 		$data->description 	= $this->model->getDescription();
 		$data->policies 	= $this->model->getToolsRanked();
-
+		$data->contributors = $this->model->getContributors();
+		$data->tools 		= $this->model->getTools();
 		$this->view->set_data($data);
 		$this->view->render();
 	}

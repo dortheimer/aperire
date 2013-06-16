@@ -8,7 +8,9 @@
 		<div data-role="content" class="osa-content">
 			<form action="<?php echo $post_url?>" method="post">
 				<label for="new_tool" class="ui-hidden-accessible">Add a policy tool:</label>
-				<input type="text" name="new_tool" id="new_tool" value="" placeholder="Your great idea!" />
+				<input type="text" name="new_tool" id="new_tool" value="" placeholder="Policy name" />
+				<label for="textarea" class="ui-hidden-accessible">Explanation:</label>
+				<textarea cols="40" rows="8" name="textarea" id="textarea" placeholder="Explanation"></textarea>
 				<input type="submit" value="Done" data-icon="check" />
 			</form>
 		<ul data-role="listview" data-count-theme="c" data-inset="true">

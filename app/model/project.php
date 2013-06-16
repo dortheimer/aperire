@@ -146,7 +146,38 @@ class AperireModelProject extends AperireModel {
 				}
 				$page_rank[$net_key] = calculatePageRank($network);
 			}
+			//sum up page rank for each node
+			$orderOfActions = array(1,2,3);
+			foreach ($orderOfActions as $kind){
+				if (!empty($page_rank[$kind])){
+					foreach ($page_rank[$kind] as $id => $value){
+						if (!isset($page_rank['total'][$id])){
+							$page_rank['total'][$id] = 0;
+						}
+	// 					echo $kind.' '.$page_rank['total'][$id].' - ';
+						$value = floatval($value);
+						switch ($kind){
 
+							//facilitation
+							case 1:
+								$page_rank['total'][$id]+= $value;
+								break;
+							//precondition
+							case 2:
+								$page_rank['total'][$id] = $page_rank['total'][$id] + $value*1.2;
+								break;
+	// 						//Contradiction
+	// 						case 4:
+	// 							$page_rank['total'][$id] = $page_rank['total'][$id] * (1/$value);
+	// 							break;
+						}
+	// 					echo $value.' '.' '.$page_rank['total'][$id]."\n";
+					}
+				}
+			}
+			//order by size:
+
+			arsort($page_rank['total']);
 
 			// calculate efficiency and effectivness
 			$query = $db->select()->from($pr.'effective')
@@ -217,7 +248,7 @@ class AperireModelProject extends AperireModel {
 	}
 
 	public function getTools() {
-		include BASE.'/app/model/tool.php';
+		require_once BASE.'/app/model/tool.php';
 
 		$pr = Aperire::$config->db->prefix;
 		$db = Aperire::$db;

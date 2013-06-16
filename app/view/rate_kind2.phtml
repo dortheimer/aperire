@@ -13,7 +13,6 @@
 			<form action="<?php echo $post_url ?>" method="post" id="<?php echo $formid ?>">
 				<?php $fieldid = 'question_2_'.$questions[0]->id.'_'.$questions[1]->id?>
 				<p>
-				<?php echo $score ?>%
 				<fieldset data-role="controlgroup">
 				    <legend>How does "<?php echo $questions[0]->name?>" effect on "<?php echo $questions[1]->name?>"?</legend>
 				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_1" value="1">
