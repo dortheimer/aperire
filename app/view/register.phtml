@@ -1,32 +1,28 @@
+<div data-role="header" data-position="fixed" data-theme="b">
+    <a href="<?php echo $back_url ?>" data-icon="arrow-l">Back</a>
+    <h1><?php echo $headline ?></h1>
+</div>
+<!-- /header -->
+
+<div data-role="content" class="osa-content">
+	<h1>Sign up for a free acount</h1>
+	<?php if (!$error) :?>
+	<?php else :?>
+	<p class="error">Sorry, there was an error "<?php echo $error?>", please try again:</p>
+	<?php endif; ?>
+	<form action="/user/create/" method="post" id="signup_1">
+		<input type="hidden" name="back_url" value="<?php echo $back_url ?>">
+		<label for="name2" class="">Display name</label>
+		<input type="text" name="real_name" id="name2" value="" />
+		<label for="email2" class="">E-mail</label>
+		<input type="text" name="email" id="email2" value="" />
+		<label for="password2" class="">Password</label>
+		<input type="password" name="password" id="password2" value="" />
+		<input type="submit" value="Sign up" data-icon="check" />
+	</form>
 
 
-
-	<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
-		    <a href="<?php echo $back_url ?>" data-icon="arrow-l">Back</a>
-		    <h1><?php echo $headline ?></h1>
-		</div>
-		<!-- /header -->
-
-		<div data-role="content" class="osa-content">
-			<h1>Sign up for a free acount</h1>
-			<?php if (!$error) :?>
-			<?php else :?>
-			<p class="error">Sorry, there was an error "<?php echo $error?>", please try again:</p>
-			<?php endif; ?>
-			<form action="/user/create/" method="post" id="signup_1">
-				<input type="hidden" name="back_url" value="<?php echo $back_url ?>">
-				<label for="name2" class="">Display name</label>
-				<input type="text" name="real_name" id="name2" value="" />
-				<label for="email2" class="">E-mail</label>
-				<input type="text" name="email" id="email2" value="" />
-				<label for="password2" class="">Password</label>
-				<input type="password" name="password" id="password2" value="" />
-				<input type="submit" value="Sign up" data-icon="check" />
-			</form>
-
-
-		</div>
+</div>
 		<!-- /content -->
 
 
