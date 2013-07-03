@@ -1,31 +1,27 @@
+<div data-role="header" data-position="fixed" data-theme="b">
+    <h1><?php echo $headline ?></h1>
+    <a href="/user/signup/?back_url=<?php echo $back_url ?>" data-icon="plus" >Sign up for an account</a>
+</div>
+<!-- /header -->
+
+<div data-role="content" class="osa-content">
+	<h1>Sign in below</h1>
+	<?php if (!$error) :?>
+	<p>If you don't have an account, click the sign up button on the top.</p>
+	<?php else :?>
+	<p class="error">Sorry, there was an error "<?php echo $error?>", please try again:</p>
+	<?php endif; ?>
+	<form action="/login/logon/" method="post" id="login_form_1">
+		<input type="hidden" name="back_url" value="<?php echo $back_url ?>">
+		<label for="email" class="ui-hidden-accessible">E-mail</label>
+		<input type="text" name="email" id="email1" placeholder="E-Mail" value="" />
+		<label for="password" class="ui-hidden-accessible">Password</label>
+		<input type="password" name="password" id="password1" placeholder="Password" value="" />
+		<input type="submit" value="Sign in	" data-icon="check" />
+	</form>
 
 
-
-	<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
-		    <h1><?php echo $headline ?></h1>
-		    <a href="/user/signup/?back_url=<?php echo $back_url ?>" data-icon="plus" >Sign up for an account</a>
-		</div>
-		<!-- /header -->
-
-		<div data-role="content" class="osa-content">
-			<h1>Sign in below</h1>
-			<?php if (!$error) :?>
-			<p>If you don't have an account, click the sign up button on the top.</p>
-			<?php else :?>
-			<p class="error">Sorry, there was an error "<?php echo $error?>", please try again:</p>
-			<?php endif; ?>
-			<form action="/login/logon/" method="post" id="login_form_1">
-				<input type="hidden" name="back_url" value="<?php echo $back_url ?>">
-				<label for="email" class="ui-hidden-accessible">E-mail</label>
-				<input type="text" name="email" id="email1" placeholder="E-Mail" value="" />
-				<label for="password" class="ui-hidden-accessible">Password</label>
-				<input type="password" name="password" id="password1" placeholder="Password" value="" />
-				<input type="submit" value="Sign in	" data-icon="check" />
-			</form>
-
-
-		</div>
+</div>
 		<!-- /content -->
 
 
