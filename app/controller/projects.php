@@ -14,13 +14,15 @@ class AperireControllerProjects extends AperireController {
 
 	}
 	public function defaultAction() {
-		AperireModel::factory(array(
+		$this->model = AperireModel::factory(array(
 			'model'=>'project'
 		));
 		$this->view = AperireView::factory(array(
 				'view'=>'projects'
 		));
 		$data = new stdClass();
+		$data->userid		= Aperire::$user->id;
+		$data->login_url	= '/login/?back_url='.urlencode($_SERVER["REQUEST_URI"]);
 		$data->projects = AperireModelProject::getProjects();
 		$data->headline 		= 'Projects';
 		$data->description 	= 'This is the current list of open projects';
@@ -38,9 +40,16 @@ class AperireControllerProjects extends AperireController {
 				'view'=>'tool'
 		));
 		// Add new tool
-		if (!empty(Aperire::$Router->post['new_tool'])){
+		if (!empty(Aperire::$Router->post['name'])){
+
+			$params = array(
+				'model' =>	'tool',
+				'name' =>	Aperire::$Router->post['name'],
+				'description' => Aperire::$Router->post['description']);
+
+			$tool = AperireModel::factory($params);
 			// Save new tool
-			$this->model->create_tool(Aperire::$Router->post['new_tool']);
+			$this->model->add_tool($tool);
 		}
 		$data = new stdClass();
 		$data = $this->pupulate_nav($data);
@@ -49,6 +58,31 @@ class AperireControllerProjects extends AperireController {
 		$data->post_url			= $this->model->url('tool');
 		$this->view->set_data($data);
 		$this->view->render();
+	}
+
+	protected function newAction () {
+		$this->model = AperireModel::factory(array(
+				'model'=>'project',
+		));
+		$this->view = AperireView::factory(array(
+				'view'=>'new_project'
+		));
+
+		$data = new stdClass();
+		$data->headline 		= 'New project';
+		$data->post_url			= $this->model->url('create');
+		$this->view->set_data($data);
+		$this->view->render();
+	}
+
+	protected function createAction () {
+
+		$params = Aperire::$Router->post;
+		$params['model'] = 'project';
+
+		$this->model = AperireModel::create($params);
+		header('Location: /projects/tool/?id='.$this->model->getId());
+
 	}
 
 	protected function pupulate_nav($data){

@@ -33,7 +33,7 @@ class AperireModelUser extends AperireModel {
 		return true;
 	}
 
-	public static function create($params) {
+	public static function create($params=null) {
 		$data = array();
 		$error = '';
 		$prefix = Aperire::$config->db->prefix;

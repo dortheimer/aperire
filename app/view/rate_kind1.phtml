@@ -1,30 +1,26 @@
+<div data-role="header" data-position="fixed" data-theme="b">
+    <h1><?php echo $headline ?></h1>
+    <a href="<?php echo $project_url ?>" data-icon="delete">Done</a>
+</div>
+<!-- /header -->
 
-
-
-	<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
-		    <a href="<?php echo $project_url ?>" data-icon="arrow-l">Project</a>
-		    <h1><?php echo $headline ?></h1>
-		</div>
-		<!-- /header -->
-
-		<div data-role="content" class="osa-content">
-			<?php $formid = 'rate_form_'.rand(1,999999) ?>
-			<form action="<?php echo $post_url ?>" method="post" id="<?php echo $formid ?>">
-				<?php $fieldid = 'question_1_'.$questions[1]->id.'_'.$questions[0]->id?>
-				<p>
-				<fieldset data-role="controlgroup">
-				    <legend>Which is more applicable?</legend>
-				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_1" value="<?php echo $questions[0]->id?>">
-				        <label for="<?php echo $fieldid ?>_1"><?php echo $questions[0]->name?></label>
-				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_2" value="<?php echo $questions[1]->id?>">
-				        <label for="<?php echo $fieldid ?>_2"><?php echo $questions[1]->name?></label>
-				        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_3" value="0">
-				        <label for="<?php echo $fieldid ?>_3">The same - no difference</label>
-				</fieldset>
-				</p>
-			</form>
-		</div>
+<div data-role="content" class="osa-content">
+	<?php $formid = 'rate_form_'.rand(1,999999) ?>
+	<form action="<?php echo $post_url ?>" method="post" id="<?php echo $formid ?>">
+		<?php $fieldid = 'question_1_'.$questions[1]->id.'_'.$questions[0]->id?>
+		<p>
+		<fieldset data-role="controlgroup">
+		    <legend>Which is more applicable?</legend>
+		        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_1" value="<?php echo $questions[0]->id?>">
+		        <label for="<?php echo $fieldid ?>_1"><?php echo $questions[0]->name?></label>
+		        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_2" value="<?php echo $questions[1]->id?>">
+		        <label for="<?php echo $fieldid ?>_2"><?php echo $questions[1]->name?></label>
+		        <input type="radio" name="<?php echo $fieldid ?>" id="<?php echo $fieldid ?>_3" value="0">
+		        <label for="<?php echo $fieldid ?>_3">The same - no difference</label>
+		</fieldset>
+		</p>
+	</form>
+</div>
 		<!-- /content -->
 
 <script type="text/javascript">
@@ -33,15 +29,4 @@ $("#<?php echo $formid ?> input").click(function () {
 	$("#<?php echo $formid ?>").submit();
 });
 </script>
-	<div data-role="footer" class="ui-body-b">
-		<div data-role="navbar" data-position="fixed">
-            <ul>
-                <li><a href="<?php echo $contributors_url ?>" data-icon="star">Contributors</a></li>
-                <li><a href="<?php echo $packages_url ?>" data-icon="grid">Policy packages</a></li>
-                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" data-icon="plus">New policy</a></li>
-                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" class="ui-state-persist" data-icon="check">Rare policies</a></li>
-
-            </ul>
-        </div>
-	</div>
 

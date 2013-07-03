@@ -28,6 +28,29 @@ class AperireModelProject extends AperireModel {
 		}
 	}
 
+	public function save() {
+
+		$db = Aperire::$db;
+		$pr = Aperire::$config->db->prefix;
+
+		$data = array(
+			'name'=>$this->name,
+			'description'=>$this->description,
+			'udate'=> new Zend_db_expr('NOW()')
+		);
+
+		// create new object
+		if (empty($this->id)){
+			$data['cdate'] =  new Zend_db_expr('NOW()')	;
+			$db->insert($pr.'projects',$data);
+			$this->id = $db->lastInsertId();
+		}
+		else {
+			$db->update($pr.'projects',$data, 'id=?',$this->id);
+		}
+		return true;
+	}
+
 	public function get ($value) {
 		if (empty($this->$value)){
 			$this->loadFromDb();
@@ -119,20 +142,53 @@ class AperireModelProject extends AperireModel {
 			* If we are even? We should display a problem link =4
 			**/
 			$temp =array();
+			$temp_r =array();
 			foreach ($relations as $tool_id => $rel_tools){
 				foreach ($rel_tools as $tool_id_rel => $values){
+
+					// get what's voted most
 					$max = array_keys($values, max($values));
+
 					if (sizeof($max)==1){
 						// save to array if relation exists
-						if ($max[0]>0)
+						if ($max[0]>0){
 							$temp[($max[0])][$tool_id][] = $tool_id_rel;
+							$temp_r[($max[0])][$tool_id][$tool_id_rel] = intval($values[$max[0]]/(array_sum($values))*100)/100;
+						}
 					}
-					else
-						$temp[4][$tool_id][] = $tool_id_rel;
+					// if we don't know
+					else{
+						// We need to figure out what's going on
+						// 1 and 2 are similar, 0 doesn't matter but 3 is contradiction.
+						// we check if count1+count2 >count3 then if count1>=count2 then count1 else count2
+
+						//make sure we have values
+						for ($i=0,$l=4;$i<4;$i++) if (!isset($values[$i])) $values[$i]=0;
+
+
+						if ($values[1]+$values[2]>= $values[3]){
+							// facilitation
+							if ($values[1] >= $values[2]){
+								$temp[1][$tool_id][] = $tool_id_rel;
+								$temp_r[1][$tool_id][$tool_id_rel] = intval($values[0]/(array_sum($values))*100)/100;
+							}
+							//precondition
+							else {
+								$temp[2][$tool_id][] = $tool_id_rel;
+								$temp_r[2][$tool_id][$tool_id_rel] = intval($values[1]/(array_sum($values))*100)/100;
+							}
+						}
+						//contradiction
+						else {
+							$temp[3][$tool_id][] = $tool_id_rel;
+							$temp_r[3][$tool_id][$tool_id_rel] = intval($values[2]/(array_sum($values))*100)/100;
+
+						}
+					}
 				}
 
 			}
-			$relations = $temp;
+			$relations = $temp_r;
 			// calculate page rank for these networks
 			foreach ($temp as $net_key => $network){
 				$network_keys = array_keys($network);
@@ -235,15 +291,15 @@ class AperireModelProject extends AperireModel {
 				$i++;
 			}
 		}
-// 		$data = new stdClass();
 
-		return array(
+		$rt = array(
 				'nodes'=>$nodes,
 				'relations'=>$relations,
 				'relations_page_rank'=>$page_rank,
 				'effect_page_rank'=>$effect_page_rank[0],
 				'applicable_page_rank'=>$effect_page_rank[1]
 		);
+		return $rt;
 
 	}
 
@@ -286,11 +342,12 @@ class AperireModelProject extends AperireModel {
 				))
 				->where('project_id=?',$this->getId())
 				->group($pr.'tools.id')
-				->limit(2);
+				->order('RAND()');
 
-		$query = $db->select("*")->from($query)->where('rate_0=0')->orWhere('rate_1=0');
+		$query = $db->select("*")->from($query)->where('rate_0=0')->orWhere('rate_1=0')->limit(2);
+
 		$res = $db->query($query)->fetchAll();
-		if ($res){
+		if ($res and sizeof($res)==2){
 
 			// set the right kind of question
 			if ($res[0]['rate_0'] <= $res[0]['rate_1']){
@@ -385,7 +442,6 @@ class AperireModelProject extends AperireModel {
 			->where('project_id=?',$this->getId())
 			->group($pr.'tools.id')
 			->order('relations');
-
 		$res = $db->query($query)->fetchAll();
 		return new AperireModelTool($res[0]);
 	}
@@ -410,6 +466,7 @@ class AperireModelProject extends AperireModel {
 			->where($pr.'tools.project_id=?',$this->getId())
 			->group($pr.'tools.id')
 			->order('s')
+			->order('rand()')
 			->limit(1);
 		$res = $db->query($query)->fetchAll();
 		return new AperireModelTool($res[0]);
@@ -447,15 +504,14 @@ class AperireModelProject extends AperireModel {
 
 	}
 
-	public function create_tool($tool){
-		$db = Aperire::$db;
-		$query = $db->insert(Aperire::$config->db->prefix.'tools',
-				array(
-						'project_id'=>$this->id,
-						'name'=>$tool,
-						'user_id'=>Aperire::$user->id,
-						'cdate'=>new Zend_db_expr('NOW()'))
-		);
+	public function add_tool(AperireModelTool $tool){
+
+		$tool->project_id = $this->id;
+		$tool->user_id = Aperire::$user->id;
+		if ($tool->save())
+			return true;
+		else
+			return false;
 	}
 
 	public function score () {
@@ -468,6 +524,8 @@ class AperireModelProject extends AperireModel {
 		$res = $db->query($query)->fetchAll();
 
 		$tools = $res[0]['c'];
+		if (!$tools)
+			return 0;
 
 		$query = $db->select()->from($pr.'tool_relations',array('c'=>new Zend_db_expr('count(*)')))
 					->join($pr.'tools',$pr.'tools.id='.$pr.'tool_relations.tool_id')

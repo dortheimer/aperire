@@ -1,47 +1,45 @@
-	<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
-		    <a href="/projects/" data-icon="arrow-l">Projects</a>
-		    <h1><?php echo $headline ?></h1>
-		 <?php if(!$userid): ?>
-		    <a href="<?php echo $login_url ?>" data-rel="dialog" data-icon="check" >Log-in</a>
-		 <?php endif; ?>
-		</div>
+	<div data-role="header" data-position="fixed" data-theme="b">
+	    <a href="/projects/" data-icon="arrow-l">Projects</a>
+	    <h1><?php echo $headline ?></h1>
+	 <?php if(!$userid): ?>
+	 	    <a href="<?php echo $login_url ?>" data-rel="dialog" data-icon="check" >Log-in</a>
+	 <?php endif; ?>
+	</div>
 
-		<div data-role="content" class="osa-content">
+	<div data-role="content" class="osa-content">
+		<h2>Description</h2>
+		<p><?php echo $description ?></p>
+		<h2>Network Analysis</h2>
+		<ul data-role="listview" data-count-theme="c" data-inset="true">
+			<li>Completion: <?php echo $score ?>%</li>
+		</ul>
+		<div id="cy<?php echo $id ?>" class="cy"></div>
 
-			<h2>Description</h2>
-			<p><?php echo $description ?></p>
-			<h2>Contributors</h2>
-			<ul data-role="listview" data-count-theme="c" data-inset="true">
-		<?php foreach ($contributors as $contributor) :?>
-			    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?>
-			    <span class="ui-li-count">
-			    	Ratings: <?php echo isset($contributor['relation']) ? $contributor['relation'] : 0 ?>
-			    	Policies: <?php echo isset($contributor['tools']) ? $contributor['tools'] : 0 ?>
-			    </span>
-			    </a></li>
+		<h2>Contributors</h2>
+		<ul data-role="listview" data-count-theme="c" data-inset="true">
+	<?php foreach ($contributors as $contributor) :?>
+		    <li><a href="<?php echo $packages_url ?>&userid=<?php echo $contributor['id'] ?>"><?php echo $contributor['real_name'] ?>
+		    <span class="ui-li-count">
+		    	Ratings: <?php echo isset($contributor['relation']) ? $contributor['relation'] : 0 ?>
+		    	Policies: <?php echo isset($contributor['tools']) ? $contributor['tools'] : 0 ?>
+		    </span>
+		    </a></li>
+	<?php endforeach;?>
+		</ul>
+		<h2>Policies</h2>
+		<ul data-role="listview" data-count-theme="c" data-inset="true">
+		<?php foreach ($tools as $tool) :?>
+			    <li><?php echo $tool->name ?></li>
 		<?php endforeach;?>
-			</ul>
-			<h2>Policies</h2>
-			<a href="/" data-role="button" data-inline="true">New policy</a>
-			<ul data-role="listview" data-count-theme="c" data-inset="true">
-			<?php foreach ($tools as $tool) :?>
-				    <li><?php echo $tool->name ?></li>
-			<?php endforeach;?>
-				    <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">Add policy</a></li>
-			</ul>
-
-			<h2>Network Analysis</h2>
-			<ul data-role="listview" data-count-theme="c" data-inset="true">
-				<li>Completion: <?php echo $score ?>%</li>
-			</ul>
-			<div id="cy<?php echo $id ?>" class="cy"></div>
+			    <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="plus">Add policy</a></li>
+		</ul>
 	</div>
 
 <?php
 if (sizeof ($policies['nodes'])>1) {
 ?>
 <script type="text/javascript">
+$(document).ready(function(){
 $('#cy<?php echo $id ?>').cytoscape({
 	layout: {
 	    name: 'arbor',//'grid',
@@ -57,7 +55,7 @@ $('#cy<?php echo $id ?>').cytoscape({
 	    repulsion: undefined,
 	    stiffness: undefined,
 	    friction: undefined,
-	    gravity: true,
+	    gravity: false,
 	    fps: undefined,
 	    precision: undefined,
 
@@ -71,8 +69,9 @@ $('#cy<?php echo $id ?>').cytoscape({
 	    // function that returns true if the system is stable to indicate
 	    // that the layout can be stopped
 	    stableEnergy: function( energy ){
-	        var e = energy;
-	        return (e.max <= 0.5) || (e.mean <= 0.3);
+//	        var e = energy;
+	        //return (e.sum <= 0.1)// || (e.mean <= 0.3);
+	        return false;
 	    }
 	  },
 	  style: cytoscape.stylesheet()
@@ -84,15 +83,16 @@ $('#cy<?php echo $id ?>').cytoscape({
 	        'font-family': 'arial',
 	        'font-size': 11,
 	        'text-valign': 'center',
-	        'background-color' :'mapData(applicable, <?php echo intval(min($policies['applicable_page_rank'])*10000) ?>, <?php echo intval(max($policies['applicable_page_rank'])*10000) ?>, #F0F9A3, #E4A04F)',
-	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
-	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 50, 80)',
-	       'border-color': '#fff'
+	        'background-color' :'mapData(applicable, <?php echo intval(min($policies['applicable_page_rank'])*10000) ?>, <?php echo intval(max($policies['applicable_page_rank'])*10000) ?>, #666666, #E4A04F)',
+	        'width': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 20, 100)',
+	        'height': 'mapData(effective, <?php echo intval(min($policies['effect_page_rank'])*10000) ?>, <?php echo intval(max($policies['effect_page_rank'])*10000) ?>, 20, 100)',
+	       'border-color': '#333'
 	      })
 	    .selector('edge')
 	      .css({
 	        'target-arrow-shape': 'triangle',
-	        'source-arrow-shape':'none'
+	        'source-arrow-shape':'none',
+	        'width': 'mapData(data.weight, 1, 100, 1, 5)',
 	      })
 	    .selector(':selected')
 	      .css({
@@ -109,27 +109,45 @@ $('#cy<?php echo $id ?>').cytoscape({
 	    .selector('edge.kind1')
 	      .css({
 	        'line-color': '#518C1A',
-	        'width': '3',
 		   	'target-arrow-color' : '#518C1A'
 	      })
 	     .selector('edge.kind2')
 	      .css({
 	        'line-color': '#2C2FC7',
-	        'target-arrow-color' : '#2C2FC7',
-	        'width': '3'
+	        'target-arrow-color' : '#2C2FC7'
 	      })
 	       .selector('edge.kind3')
 	      .css({
 	        'line-color': '#BD1A1A',
+	        'target-arrow-color': '#BD1A1A'
+	      })
+	      .selector('edge.kind1dual')
+	      .css({
+	        'line-color': '#518C1A',
+		   	'target-arrow-color' : '#518C1A',
+	        'source-arrow-shape':'triangle',
+	        'source-arrow-color': '#518C1A'
+	      })
+	     .selector('edge.kind2dual')
+	      .css({
+	        'line-color': '#2C2FC7',
+	        'target-arrow-color' : '#2C2FC7',
+	        'source-arrow-shape':'triangle',
+	        'source-arrow-color': '#2C2FC7'
+	      })
+	       .selector('edge.kind3dual')
+	      .css({
+	        'line-color': '#BD1A1A',
 	        'target-arrow-color': '#BD1A1A',
-	        'width': '3'
+	        'source-arrow-shape':'triangle',
+	        'source-arrow-color': '#BD1A1A'
 	      }),
 
 	  elements: {
 	    nodes: [
 <?php
-		foreach ($policies['relations_page_rank']['total'] as $node => $page_rank_temp) {
-			$name = 				$policies['nodes'][$node];
+		foreach ($policies['nodes'] as $node => $tools_name) {
+			$name = 				$tools_name;
 			$effectiveness = 		!empty($policies['effect_page_rank'][$node]) ?
 										intval($policies['effect_page_rank'][$node]*10000) : 0;
 
@@ -148,12 +166,23 @@ $('#cy<?php echo $id ?>').cytoscape({
 	    ],
 	    edges: [
 <?php
-$arr=array();
+$arr = array();
+$flags = array();
 foreach ($policies['relations'] as $kind_id => $network) {
 
 	foreach ($network as $node => $edges){
-		foreach ($edges as $edge){
-			$arr[] = '{ data: {source:\''.$node.'\',target:\''.$edge.'\'},classes: \'kind'.$kind_id.'\' }';
+		foreach ($edges as $edge => $weight){
+			//check if dual arrow:
+			if (isset($policies['relations'][$kind_id][$edge][$node])){
+				// make sure we don't do other side
+				if (!isset($flags[$node.'_'.$edge])){
+					$arr[] = '{ data: {source:\''.$node.'\',target:\''.$edge.'\',weight:'.intval($weight*100).'},classes: \'kind'.$kind_id.'dual\' }';
+					$flags[$edge.'_'.$node] = 1;
+				}
+			}
+			else {
+				$arr[] = '{ data: {source:\''.$node.'\',target:\''.$edge.'\',weight:'.intval($weight*100).'},classes: \'kind'.$kind_id.'\' }';
+			}
 		}
 	}
 }
@@ -170,7 +199,7 @@ echo join(",\n",$arr);
 
 	  }
 	});
-
+});
 
 </script>
 		<!-- /content -->
@@ -181,8 +210,7 @@ echo join(",\n",$arr);
 	<div data-role="footer">
 		<div data-role="navbar" data-position="fixed">
             <ul>
-                <li><a href="<?php echo $packages_url ?>" data-icon="grid" class="ui-state-persist">Policy packages</a></li>
-                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?> data-icon="check">Rare policies</a></li>
+                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" <?php echo $userid ? '' :'data-rel="dialog"' ?>  class="ui-state-persist"data-icon="check">Start rating policies!</a></li>
             </ul>
         </div>
 	</div>

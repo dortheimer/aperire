@@ -1,34 +1,23 @@
-<div data-role="page" class="osa-demos">
-		<div data-role="header" data-position="fixed" data-theme="b">
-			<a href="<?php echo $contributors_url ?>" data-icon="arrow-l">Project</a>
-		    <h1>Add new policy tool</h1>
-		</div>
-		<!-- /header -->
+	<div data-role="header" data-position="fixed" data-theme="b">
+		<a href="<?php echo $packages_url ?>" data-icon="back">Done</a>
+	    <h1>Add new policy tool</h1>
+	</div>
+	<!-- /header -->
 
-		<div data-role="content" class="osa-content">
-			<form action="<?php echo $post_url?>" method="post">
-				<label for="new_tool" class="ui-hidden-accessible">Add a policy tool:</label>
-				<input type="text" name="new_tool" id="new_tool" value="" placeholder="Policy name" />
-				<label for="textarea" class="ui-hidden-accessible">Explanation:</label>
-				<textarea cols="40" rows="8" name="textarea" id="textarea" placeholder="Explanation"></textarea>
-				<input type="submit" value="Done" data-icon="check" />
-			</form>
+	<div data-role="content" class="osa-content">
+		<p>Every project is made out of policies. Policies are principles or rules to guide decisions and achieve rational outcomes.<br />
+		Write a short name that will explain what it is about and use the explanation field to extend it.</p>
+		<form action="<?php echo $post_url?>" method="post">
+			<label for="name4" class="ui-hidden-accessible">Add a policy tool:</label>
+			<input type="text" name="name" id="name4" value="" placeholder="Policy name" />
+			<label for="description4" class="ui-hidden-accessible">Explanation:</label>
+			<textarea cols="40" rows="8" name="description" id="description4" placeholder="Explanation"></textarea>
+			<input type="submit" value="Done" data-icon="check" />
+		</form>
 		<ul data-role="listview" data-count-theme="c" data-inset="true">
 		<?php foreach ($tools as $tool) :?>
 			    <li><?php echo $tool->name ?></li>
 		<?php endforeach;?>
 		</ul>
-		</div>
-		<!-- /content -->
-
-	<div data-role="footer" class="ui-body-b">
-		<div data-role="navbar" data-position="fixed">
-            <ul>
-                <li><a href="<?php echo $contributors_url ?>" data-icon="star">Contributors</a></li>
-                <li><a href="<?php echo $packages_url ?>" data-icon="grid">Policy packages</a></li>
-                <li><a href="<?php echo $userid ? $new_tool_url : $login_url ?>" <?php echo $userid ? 'data-rel="dialog"' : '' ?> class="ui-state-persist" data-icon="plus">New policy</a></li>
-                <li><a href="<?php echo $userid ? $rate_url : $login_url ?>" data-icon="check">Rare policies</a></li>
-
-            </ul>
-        </div>
 	</div>
+		<!-- /content -->
