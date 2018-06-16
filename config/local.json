@@ -1,8 +1,11 @@
 {
   "db": {
-    "name":"aperire",
-    "host":"localhost",
-    "user":"dev",
-    "pass":"5238334"
+    "name": "aperire",
+    "host": "localhost",
+    "user": "dev",
+    "pass": "5238334"
+  },
+  "env": {
+    "port": "2000"
   }
 }

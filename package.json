@@ -15,6 +15,9 @@
     "http-errors": "~1.6.2",
     "lodash": "^4.17.10",
     "mysql2": "^1.5.3",
+    "ngraph.cw": "^2.0.0",
+    "ngraph.graph": "0.0.14",
+    "ngraph.pagerank": "^0.1.4",
     "node-exceptions": "^3.0.0",
     "pino": "^4.17.3",
     "sequelize": "^4.37.10"

@@ -13,7 +13,7 @@
   <title>Aperire</title>
 </head>
 
-<body>
+<body id="body">
 
   <!-- First navigation component: Navigator. This will remain always on top of the app. -->
   <ons-navigator id="myNavigator" page="splitter.html"></ons-navigator>
@@ -40,7 +40,7 @@
             <ons-icon icon="ion-navicon, material:md-menu" size="32px, material:24px"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center">Aperire</div>
+        <div class="center" data-i18n>Aperire</div>
         <div class="right">
           <!-- Toolbar-button  only visible for iOS/other. -->
           <ons-if platform="ios other">
@@ -57,7 +57,7 @@
       </ons-if>
       <div style="padding: 1px 0 0 0;">
         <div class="card">
-          <div class="card__content">
+          <div class="card__content" data-i18n>
             Welcome to Aperire, the machine that helps you solve complex problems using your friends. Select a project and help solving
             problems, or post a problem.
           </div>

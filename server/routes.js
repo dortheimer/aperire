@@ -27,11 +27,7 @@ router.patch('/project', (req, res, next) =>
 
 router.get('/project/:project_id/idea', (req, res, next) =>
   dispatcher(() =>
-    Idea.findAll({
-      where: {
-        project_id: req.params.project_id
-      }
-    }))(req, res, next));
+    Idea.analysed(req.params.project_id))(req, res, next));
 
 router.post('/project/:project_id/idea', (req, res, next) =>
   dispatcher(() =>

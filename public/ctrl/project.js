@@ -2,33 +2,44 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
 
   var idea_collection = [];
 
+  // the direction of the ideas is critical for the graphs to calculate page rank.
   const questions = [{
-    id: 'effective',
-    headline: 'Do you agree or disagree with the following statement?',
-    question: ['"{{idea1}}"<strong style="display:block">is more effective then</strong> "{{idea2}}"']
-  }, {
-    id: 'applicable',
-    headline: 'Do you agree or disagree with the following statement?',
-    question: ['"{{idea1}}" <strong style="display:block">is more applicable than</strong> "{{idea2}}"'],
-  }, {
-    id: 'precondition',
-    headline: 'Do you agree or disagree with the following statement?',
-    question: [
-      '"{{idea1}}"<strong style="display:block">is a precondition for</strong> "{{idea2}}',
-    ]
-  }, {
-    id: 'facilitate',
-    headline: 'Do you agree or disagree with the following statement?',
-    question: [
-      '"{{idea1}}"<strong style="display:block">facilitates</strong> "{{idea2}}',
-    ]
-  }, {
-    id: 'contradict',
-    headline: 'Do you agree or disagree with the following statement?',
-    question: [
-      '"{{idea1}}"<strong style="display:block">contradicts</strong> "{{idea2}}',
-    ]
-  }];
+      id: '1',
+      headline: 'Do you agree or disagree with the following statement?',
+      question: ['"{{idea2}}"<strong style="display:block">is more effective then</strong> "{{idea1}}"']
+    }, {
+      id: '2',
+      headline: 'Do you agree or disagree with the following statement?',
+      question: ['"{{idea2}}" <strong style="display:block">is more applicable than</strong> "{{idea1}}"'],
+    }, {
+      id: '3',
+      headline: 'Do you agree or disagree with the following statement?',
+      question: [
+        '"{{idea2}}"<strong style="display:block">is a precondition for</strong> "{{idea1}}',
+      ]
+    }, {
+      id: '4',
+      headline: 'Do you agree or disagree with the following statement?',
+      question: [
+        '"{{idea2}}"<strong style="display:block">facilitates</strong> "{{idea1}}',
+      ]
+    }, {
+      id: '5',
+      headline: 'Do you agree or disagree with the following statement?',
+      question: [
+        '"{{idea2}}"<strong style="display:block">contradicts</strong> "{{idea1}}',
+      ]
+    }
+    // , Synergy is a bi directional relation which makes it hard to calculate.
+    // It's better to have facilitate on both directions
+    // {
+    //   id: '6',
+    //   headline: 'Do you agree or disagree with the following statement?',
+    //   question: [
+    //     '"{{idea1}}" and "{{idea2}} <strong style="display:block">are synergistic</strong>',
+    //   ]
+    // }
+  ];
 
   const shuffle = function (array) {
     var currentIndex = array.length,
@@ -71,6 +82,13 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
     return response;
   }
 
+  const format_percent = function (float) {
+    if (!float) float = 0;
+    return float.toLocaleString("en", {
+      style: "percent"
+    })
+  }
+
   const render_question = function () {
     const data = randomQuestion();
     $("#question")
@@ -81,15 +99,16 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
     data.question.map(function (answer, index) {
       var el = '<div style="margin:20px; text-align:center">' + answer + '</div>' +
         '<ons-row style="margin:20px;">' +
-        '<ons-col><ons-fab id="btn-agree"><ons-icon icon="thumbs-down"></ons-icon> </ons-fab> Agree</ons-col>' +
-        '<ons-col><ons-fab id="btn-disagree"><ons-icon icon="thumbs-up"></ons-icon></ons-fab> Disagree</ons-col>' +
+        '<ons-col><ons-fab id="btn-agree"><ons-icon icon="thumbs-up"></ons-icon> </ons-fab> Agree</ons-col>' +
+        '<ons-col><ons-fab id="btn-disagree"><ons-icon icon="thumbs-down"></ons-icon></ons-fab> Disagree</ons-col>' +
         '</ons-row>';
       $("#answerList").append(el);
       $("#btn-agree").click(function () {
         select_question(data, true)
       });
       $("#btn-disagree").click(function () {
-        select_question(data, false)
+        // put new question without saving
+        render_question()
       });
     })
   }
@@ -102,10 +121,6 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
         'kind': data.ideas[1].id
       })
       .then(function (success) {
-        ons.notification.toast("success", {
-          timeout: 1000,
-          animation: 'fall'
-        })
         render_question();
       })
 
@@ -127,18 +142,25 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
     })
 
     api.get('project/' + project.id + '/idea')
-      .then(function (ideas) {
-        idea_collection = ideas;
-        ideas.map(function (idea) {
-          if (idea.description) {
-            var el = $('<ons-list-item expandable>' + idea.name +
-              '<div class="expandable-content">' + (idea.description ? idea.description : 'No description') + '</div>' +
-              '</ons-list-item>');
-          } else {
-            var el = $('<ons-list-item>' + idea.name + '</ons-list-item>');
-          }
+      .then(function (clusters) {
+        //loop on clusters
+        Object.keys(clusters).map(function (clusterId) {
+          $("#ideaList").append($('<ons-list-header>Cluster ' + clusterId + '</ons-list-header>'));
+          clusters[clusterId].map(idea => {
+            // this is the cache for answering
+            let obj = idea.idea;
+            idea_collection.push(obj);
 
-          $("#ideaList").append(el);
+            if (idea.description) {
+              var el = $('<ons-list-item expandable>' + obj.name +
+                '<div class="expandable-content">' + (obj.description ? obj.description : 'No description') + '</div>' +
+                '</ons-list-item>');
+            } else {
+              var el = $('<ons-list-item>' + obj.name + ' ' + format_percent(idea.applicability) + ' ' + format_percent(idea.effectiveness) +
+                '</ons-list-item>');
+            }
+            $("#ideaList").append(el);
+          })
         })
 
         render_question();
