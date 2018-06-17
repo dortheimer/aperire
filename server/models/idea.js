@@ -148,17 +148,32 @@ Idea.analysed = (project_id) => {
 
       ideas.map(idea => ideaMap[idea.id] = idea);
 
-      let id = null;
       // loop on communities and ass rankings
       Object.keys(communities).map((key) => {
         Object.keys(communities[key]).map((i) => {
-          id = communities[key][i].id;
-          communities[key][i].effectiveness = ranks.effRank[id];
-          communities[key][i].applicability = ranks.appRank[id];
-          communities[key][i].idea = ideaMap[id];
+          const id = communities[key][i].id;
+          communities[key][i] = {
+            effectiveness: ranks.effRank[id],
+            applicability: ranks.appRank[id],
+            idea: ideaMap[id],
+          };
+          delete ideaMap[id];
         });
       });
-      return communities;
+
+      const returnArray = Object.values(communities);
+      // add remaining ideas
+      Object.keys(ideaMap).map((id) => {
+        const key = returnArray.length;
+        returnArray[key] = [{
+          idea: ideaMap[id],
+          effectiveness: ranks.effRank[id],
+          applicability: ranks.appRank[id],
+        }];
+      });
+
+      // add missing ideas
+      return returnArray;
     });
 };
 

@@ -44,7 +44,51 @@ Run the server using:
 node bin/aperire
 ```
 
-For production it is recommended running it with pm2 and apache.
+### Running in production
+
+For production it is recommended running it with pm2 and Apache.
+
+```bash
+npm -g install pm2
+pm2 start bin/aperire 
+```
+
+Install Apache and then configure it:
+
+```bash
+sudo vi /etc/apache2/sites-available/aperire.conf
+```
+
+```apacheconf
+<VirtualHost *:80>
+    ServerAdmin you@domain.org
+    ServerName aperire.domain.org
+
+    ProxyRequests off
+    ProxyPreserveHost On
+    ProxyVia Full
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+
+    <Location />
+        ProxyPass http://localhost:3000/
+        ProxyPassReverse http://localhost:3000/
+    </Location>
+
+</VirtualHost>
+```
+
+Activate the new virtual host:
+
+```bash
+sudo a2ensite aperire.conf 
+sudo apachectl restart
+```
+
+### Running for development
+
 For development run it with npm and nodemon:
 
 ```bash

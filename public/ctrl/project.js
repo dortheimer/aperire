@@ -15,19 +15,19 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
       id: '3',
       headline: 'Do you agree or disagree with the following statement?',
       question: [
-        '"{{idea2}}"<strong style="display:block">is a precondition for</strong> "{{idea1}}',
+        '"{{idea2}}"<strong style="display:block">is a precondition for</strong> "{{idea1}}"',
       ]
     }, {
       id: '4',
       headline: 'Do you agree or disagree with the following statement?',
       question: [
-        '"{{idea2}}"<strong style="display:block">facilitates</strong> "{{idea1}}',
+        '"{{idea2}}"<strong style="display:block">facilitates</strong> "{{idea1}}"',
       ]
     }, {
       id: '5',
       headline: 'Do you agree or disagree with the following statement?',
       question: [
-        '"{{idea2}}"<strong style="display:block">contradicts</strong> "{{idea1}}',
+        '"{{idea2}}"<strong style="display:block">contradicts</strong> "{{idea1}}"',
       ]
     }
     // , Synergy is a bi directional relation which makes it hard to calculate.
@@ -83,7 +83,7 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
   }
 
   const format_percent = function (float) {
-    if (!float) float = 0;
+    if (!float) return '';
     return float.toLocaleString("en", {
       style: "percent"
     })
@@ -151,14 +151,20 @@ define(['jquery', 'onsenui', 'mustache', 'helper/api'], function ($, ons, Mustac
             let obj = idea.idea;
             idea_collection.push(obj);
 
-            if (idea.description) {
-              var el = $('<ons-list-item expandable>' + obj.name +
-                '<div class="expandable-content">' + (obj.description ? obj.description : 'No description') + '</div>' +
-                '</ons-list-item>');
-            } else {
-              var el = $('<ons-list-item>' + obj.name + ' ' + format_percent(idea.applicability) + ' ' + format_percent(idea.effectiveness) +
-                '</ons-list-item>');
-            }
+
+
+            var el = $(' <ons-list-item>' +
+              '<div class="left">' +
+              format_percent(idea.applicability) +
+              '</div>' +
+              '<div class="center">' +
+              '<span class="list-item__title">' + obj.name + '</span><span class="list-item__subtitle">' + (obj.description ? obj.description : '') + '</span>' +
+              '</div>' +
+              '</ons-list-item>');
+
+            // var el = $('<ons-list-item><div class="center">' + obj.name + '</dive>' +
+            // '<div class="left">' + format_percent(idea.applicability) + ' ' + format_percent(idea.effectiveness) + '</div>' +
+            // '</ons-list-item>');
             $("#ideaList").append(el);
           })
         })
