@@ -1,0 +1,34 @@
+<ons-page id="newTaskPage">
+  <ons-toolbar>
+    <div class="left">
+      <ons-back-button>Project</ons-back-button>
+    </div>
+    <div class="center">New Idea</div>
+    <div class="right">
+      <ons-if platform="android">
+        <ons-toolbar-button component="button/save-idea">
+          <ons-icon icon="md-save"></ons-icon>
+        </ons-toolbar-button>
+      </ons-if>
+    </div>
+  </ons-toolbar>
+
+  <ons-list-title>Add an idea</ons-list-title>
+  <ons-list>
+    <ons-list-item modifier="nodivider">
+      <div class="center">
+        <ons-input id="title-name" type="text" placeholder="Idea" style="width:100%"></ons-input>
+      </div>
+    </ons-list-item>
+    <ons-list-item modifier="nodivider">
+      <div class="center">
+        <textarea id="description-input" class="textarea textarea--transparent" rows="4" style="width:100%" placeholder="Explanation"></textarea>
+      </div>
+    </ons-list-item>
+  </ons-list>
+
+
+  <ons-if platform="ios other">
+    <ons-button modifier="large" component="button/save-idea">Add New Idea</ons-button>
+  </ons-if>
+</ons-page>

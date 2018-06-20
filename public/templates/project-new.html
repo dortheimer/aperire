@@ -1,0 +1,34 @@
+<ons-page id="newTaskPage">
+  <ons-toolbar>
+    <div class="left">
+      <ons-back-button>Projects</ons-back-button>
+    </div>
+    <div class="center">New Project</div>
+    <div class="right">
+      <ons-if platform="android">
+        <ons-toolbar-button component="button/save-project">
+          <ons-icon icon="md-save"></ons-icon>
+        </ons-toolbar-button>
+      </ons-if>
+    </div>
+  </ons-toolbar>
+
+  <ons-list-title>Add a project</ons-list-title>
+  <ons-list>
+    <ons-list-item modifier="nodivider">
+      <div class="center">
+        <ons-input id="title-name" type="text" placeholder="Project name" style="width:100%"></ons-input>
+      </div>
+    </ons-list-item>
+    <ons-list-item modifier="nodivider">
+      <div class="center">
+        <textarea id="description-input" class="textarea textarea--transparent" rows="4" style="width:100%" placeholder="Description"></textarea>
+      </div>
+    </ons-list-item>
+  </ons-list>
+
+
+  <ons-if platform="ios other">
+    <ons-button modifier="large" component="button/save-project">Add Project</ons-button>
+  </ons-if>
+</ons-page>

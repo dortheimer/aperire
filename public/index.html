@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="/css/onsenui.css">
+  <link rel="stylesheet" href="/css/onsen-css-components.min.css">
+
+  <script data-main="init" src="lib/require.js"></script>
+  <title>Aperire</title>
+</head>
+
+<body id="body">
+
+  <!-- First navigation component: Navigator. This will remain always on top of the app. -->
+  <ons-navigator id="myNavigator" page="splitter.html"></ons-navigator>
+
+  <!-- Second navigation component: Splitter. This will disappear if the first component changes its content. -->
+  <template id="splitter.html">
+    <ons-page>
+      <ons-splitter id="mySplitter">
+        <ons-splitter-side page="templates/menu.html" swipeable width="250px" collapse swipe-target-width="50px">
+        </ons-splitter-side>
+        <ons-splitter-content page="projects.html">
+        </ons-splitter-content>
+      </ons-splitter>
+    </ons-page>
+  </template>
+
+  <!-- Third navigation component: Tabbar. This will disappear if the first or second components change their content. -->
+  <template id="projects.html">
+    <ons-page id="projectsPage">
+      <ons-toolbar>
+        <div class="left">
+          <!-- Toolbar-button with different icons depending on the platform. -->
+          <ons-toolbar-button component="button/menu">
+            <ons-icon icon="ion-navicon, material:md-menu" size="32px, material:24px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" data-i18n>Aperire</div>
+        <div class="right">
+          <!-- Toolbar-button  only visible for iOS/other. -->
+          <ons-if platform="ios other">
+            <ons-toolbar-button component="button/new-project">New</ons-toolbar-button>
+          </ons-if>
+        </div>
+      </ons-toolbar>
+
+      <!-- Floating Action Button only visible for Android. -->
+      <ons-if platform="android">
+        <ons-fab position="right bottom" component="button/new-project">
+          <ons-icon icon="md-edit"></ons-icon>
+        </ons-fab>
+      </ons-if>
+      <div style="padding: 1px 0 0 0;">
+        <div class="card">
+          <div class="card__content" data-i18n>
+            Welcome to Aperire, the machine that helps you solve complex problems using your friends. Select a project and help solving
+            problems, or post a problem.
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-positioned Tabbar: top on Android, bottom on iOS/other. -->
+      <ons-list id="projectList"> </ons-list>
+
+    </ons-page>
+  </template>
+</body>
+
+</html>

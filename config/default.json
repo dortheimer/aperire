@@ -1,0 +1,19 @@
+{
+  "db": {
+    "name": "aperire",
+    "host": "localhost",
+    "user": "",
+    "pass": ""
+  },
+  "env": {
+    "port": "3000"
+  },
+  "session": {
+    "secret": "change me to something else",
+    "resave": false,
+    "saveUninitialized": true,
+    "cookie": {
+      "secure": false
+    }
+  }
+}

@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const Project = require('../server/models/project');
+const User = require('../server/models/user');
+const Idea = require('../server/models/idea');
+const Relation = require('../server/models/relation');
+
+try {
+  User.sync({
+      force: true,
+    })
+    .then(() => Project.sync({
+      force: true,
+    }))
+    .then(() => Idea.sync({
+      force: true,
+    }))
+    .then(() => Relation.sync({
+      force: true,
+    }))
+    .then(() => process.exit(0));
+} catch (e) {
+  console.error(e);
+  process.exit(0);
+}

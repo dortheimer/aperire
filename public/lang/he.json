@@ -1,0 +1,23 @@
+{
+  "values": {
+    "Aperire": "אפירה",
+    "Welcome to Aperire, the machine that helps you solve complex problems using your friends. Select a project and help solving problems, or post a problem.": "ברוכים הבאים ל Aperire, המכונה שעוזרת לך לפתור בעיות מורכבות באמצעות החברים שלך. בחר פרויקט ועזור בפתרון בעיות, או פרסם בעיה."
+  },
+  "contexts": [{
+      "matches": {
+        "gender": "male"
+      },
+      "values": {
+        "%{name} updated their profile": "%{name} updated his profile"
+      }
+    },
+    {
+      "matches": {
+        "gender": "female"
+      },
+      "values": {
+        "%{name} updated their profile": "%{name} updated her profile"
+      }
+    }
+  ]
+}
