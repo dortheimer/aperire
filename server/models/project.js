@@ -23,7 +23,9 @@ const Project = sequelize.define('project', {
       key: 'id',
     },
   },
-
+  sid: {
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Project;

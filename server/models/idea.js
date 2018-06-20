@@ -34,7 +34,9 @@ const Idea = sequelize.define('idea', {
       key: 'id',
     },
   },
-
+  sid: {
+    type: Sequelize.STRING,
+  },
 });
 
 
@@ -75,12 +77,13 @@ Idea.analysed = (project_id) => {
   r.kind IN(1,2)
   GROUP BY r.idea_id1, r.idea_id2, r.kind`;
 
+  // kind 5 is no relation
   const sql2 = `SELECT r.idea_id1,r.idea_id2, sum(CASE r.kind WHEN 3 THEN 5 WHEN 4 THEN 1 WHEN 5 THEN -5 END) as weight
   FROM relations r
   inner join ideas i on r.idea_id1=i.id
   WHERE 
   i.project_id=$project_id AND
-  r.kind IN(3,4,5)
+  r.kind IN(3,4,6)
   GROUP BY r.idea_id1, r.idea_id2`;
 
   const promise1 = sequelize.query(sql1, binding)
@@ -105,8 +108,8 @@ Idea.analysed = (project_id) => {
       const appRank = Pagerank(applicability);
       return {
         effRank,
-        appRank
-      }
+        appRank,
+      };
     });
 
   const promise2 = sequelize.query(sql2, binding)
@@ -144,7 +147,7 @@ Idea.analysed = (project_id) => {
       const communities = results[1];
       const ranks = results[0];
       const ideas = results[2];
-      const ideaMap = {}
+      const ideaMap = {};
 
       ideas.map(idea => ideaMap[idea.id] = idea);
 

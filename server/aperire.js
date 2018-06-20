@@ -2,12 +2,18 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('express-pino-logger')();
+const logger = require('express-pino-logger');
+const session = require('express-session');
+const config = require('config');
 const log = require('./lib/log');
 
+
+// init logger
+logger();
 const app = express();
 
-// app.use(logger);
+app.set('trust proxy', 1);
+app.use(session(config.get('session')));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false

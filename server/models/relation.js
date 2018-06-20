@@ -35,6 +35,9 @@ const Relation = sequelize.define('relation', {
   kind: {
     type: Sequelize.INTEGER,
   },
+  sid: {
+    type: Sequelize.STRING,
+  },
 
 });
 module.exports = Relation;

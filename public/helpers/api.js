@@ -12,7 +12,7 @@ define(['jquery', 'onsenui'], function ($, ons) {
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
             ons.notification.alert('Server returned an error:' + errorThrown);
-            reject(exception);
+            reject(errorThrown);
           })
       })
     },
@@ -28,7 +28,7 @@ define(['jquery', 'onsenui'], function ($, ons) {
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
             ons.notification.alert('Server returned an error:' + errorThrown);
-            reject(exception);
+            reject(errorThrown);
           })
       })
     }

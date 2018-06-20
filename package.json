@@ -12,6 +12,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "express-pino-logger": "^3.0.1",
+    "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
     "lodash": "^4.17.10",
     "mysql2": "^1.5.3",
